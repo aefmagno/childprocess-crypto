@@ -5,15 +5,11 @@ function encryptData(publicKey, file) {
   return publicEncrypt(publicKey, buffer)
 }
 
-const parent = {}
-process.on('message', (data) => {
-  if (!parent.publicKey) {
-    parent.publicKey = data.publicKey
-    parent.file = data.file
+process.stdin.on('data', (data) => {
+  const { publicKey, file } = JSON.parse(data)
 
-    const encryptedData = encryptData(parent.publicKey, parent.file)
-    process.send(encryptedData)
-  }
+  const encryptedData = encryptData(publicKey, file)
+  process.stdout.write(encryptedData)
 })
 
 process.on('SIGHUP', () => {
