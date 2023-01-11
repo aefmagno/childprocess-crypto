@@ -20,13 +20,21 @@ child.on('message', (data) => {
 
     process.kill(child.pid, 'SIGHUP')
     result.executionTime = process.uptime()
-
     console.table(result)
+    process.exit()
   } else {
-    process.kill(child.pid, 'SIGHUP')
     result.verify = 'The signature is verified'
     result.memoryUsage = process.memoryUsage().external
     result.executionTime = process.uptime()
     console.table(result)
+    process.kill(child.pid, 'SIGHUP')
   }
+})
+
+process.stderr.on('data', (err) => {
+  console.log(err)
+})
+
+process.on('error', (err) => {
+  console.log(err)
 })

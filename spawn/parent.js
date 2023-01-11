@@ -18,14 +18,22 @@ child.stdout.on('data', (data) => {
     result.verify = 'The signature is verified'
     result.memoryUsage = process.memoryUsage().external
 
-    process.kill(child.pid, 'SIGHUP')
     result.executionTime = process.uptime()
-
+    process.kill(child.pid, 'SIGHUP')
     console.table(result)
   } else {
     result.verify = 'The signature is verified'
     result.memoryUsage = process.memoryUsage().external
     result.executionTime = process.uptime()
+    process.kill(child.pid, 'SIGHUP')
     console.table(result)
   }
+})
+
+child.stderr.on('data', (err) => {
+  console.log(err.message)
+})
+
+child.on('error', (err) => {
+  console.log(err)
 })
